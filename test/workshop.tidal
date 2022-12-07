@@ -1,0 +1,21 @@
+hush''
+
+keySig = mode 3 $ F \\\ mMaj
+
+d1 $ slow 2 $ note (keySig "<[0,9,4]>" |- "<12 7 4 9>") #ch 1
+
+d10 $ midinote "[36 31]*2" #ch 10
+
+:r
+
+uciRef
+
+header
+
+:r
+patFromProg prog4
+
+
+:r
+
+pattern <-  progToPatIO
