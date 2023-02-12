@@ -2,7 +2,9 @@ hush
 
 d1 $ note ("0*4") #ch 1
 
-d1 $ s "bd"
+d1 $ s "[[bd hh?] [hh hh?], [sd(3,8)?]/2]*4"
+
+d2 $ s "[bd [hh <~@2 bd?>]]*2"
 
 :t ("0 0" :: Pattern)
 

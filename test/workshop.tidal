@@ -19,3 +19,5 @@ patFromProg prog4
 :r
 
 pattern <-  progToPatIO
+
+d1 $ (arpg pattern) #ch 1
