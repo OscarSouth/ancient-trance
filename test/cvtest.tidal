@@ -1,6 +1,6 @@
-pitch pitch = n pitch # s "pitch"
-octave octave = stepsPerOctave octave
-gate gate = n gate # s "gate" # legato 0.05
+pitch p = n p # s "pitch"
+octave o = stepsPerOctave o
+gate g = n g # s "gate" # legato 0.05
 clock = rate "[1 0]*2" # s "voltage"
 ar w x = attack w # decay x # s "ar"
 adsr w x y z = attack w # decay x # sustain y # release z # s "ar"
@@ -8,11 +8,16 @@ adsr w x y z = attack w # decay x # sustain y # release z # s "ar"
 -- lfo x = rate x # s "lfo"
 -- glide p r = portamento p # rate r
 
-cvOut x = channel (x + 1)
-volt volt = n volt # s "voltage"
+cv x = channel (x + 1)
+volt v = n v # s "voltage"
 
 hush
 
-d3 $ volt (slow 1 $ lfo tri 0 1) # cvOut 1
+d1 $ clock #cv 2
 
-d1 $ volt "[0 1]*16" #cvOut 2
+d2 $ gate "1 0" #cv 1
+
+
+d3 $ volt (slow 1 $ lfo tri 0 1) # cv 1
+
+d2 $ volt "1*2"  #legato 0.05 #cvOut 2

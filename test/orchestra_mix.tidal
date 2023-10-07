@@ -18,6 +18,7 @@ d1 $ note "[-36 -24 -12 0 12 24 36 43]" #legato 0.8 #ch 14 -- low strings attack
 d1 $ note "[-36 -24 -12 0 12 24 36 43]" #legato 0.8 #ch 15 -- high slow strings C1-A7
 d1 $ note "[-36 -24 -12 0 12 24 36 43]" #legato 0.8 #ch 16 -- full strings C1-A7
 
+hush
 
 -- PAN
 -- 1: flute -10
@@ -182,3 +183,5 @@ once $ strings "pp ff" +| note "[-36 45]*2" #legato 0.8 #arco
 -- 16: strings arco [db,vc,va,vn1,vn2]
 
 d1 $ note ("[-36 -24 -12 0 12 24]/6" +| "[<[2 4 5 9 12]*6 [2 5 7 11 12]*6 [4 5 8 11 12]*6>]/6") #pizz
+
+hush

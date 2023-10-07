@@ -59,6 +59,7 @@ s.reboot {
     }).add
   );
 
+	/*
   (
     SynthDef(\gate, {
       |
@@ -70,6 +71,7 @@ s.reboot {
       OffsetOut.ar(channel, DC.ar(n) * amp);
     }).add
   );
+	*/
 
   (
     SynthDef(\voltage, {
@@ -93,6 +95,7 @@ s.reboot {
     }).add
   );
 
+	/*
   (
     SynthDef(\saw, {
       |
@@ -156,5 +159,6 @@ s.reboot {
       OffsetOut.ar(channel, [sig]);
     }).add
   );
+	*/
 
 )

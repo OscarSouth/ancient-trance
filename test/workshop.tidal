@@ -2,9 +2,11 @@ hush''
 
 keySig = mode 3 $ F \\\ mMaj
 
-d1 $ slow 2 $ note (keySig "<[0,9,4]>" |- "<12 7 4 9>") #ch 1
+setcps 1
 
-d10 $ midinote "[36 31]*2" #ch 10
+d1 $ slow 2 $ note (keySig "<[0,9,4]>" |- "<12 7 4 9>") #ch 12
+
+d10 $ midinote "[36 31]*2" #ch 12
 
 :r
 
@@ -13,11 +15,86 @@ uciRef
 header
 
 :r
+
 patFromProg prog4
 
+patToList n pat = fmap value $ queryArc pat (Arc 0 n)
 
 :r
 
-pattern <-  progToPatIO
 
-d1 $ (arpg pattern) #ch 1
+prog <- prog4
+
+prog
+
+pattern
+
+patToList 2 pattern
+
+d1 $ mono $ slow 4 $ (arp "pinkyup" pattern) + note 12 #ch 12
+
+hush''
+
+pattern <- progToPatIO
+
+l = [[-3,1,4],[-6,-3,2],[-6,-3,2],[-5,-1,2]] :: Num a => [[a]]
+
+
+-- this is it
+
+setcps 0.25
+
+p <- prog4
+
+d2 $ (cat $ note <$> (`toScale` "[0 7 3 7 5 7 3 7]") <$> (fmap fromInteger <$> p)) |- note 24 #ch 12
+
+d2 $ (cat $ note <$> (`toScale` "[0 1 2 3]*4") <$> (fmap fromInteger <$> p)) |- note 24 #ch 12
+
+hush
+
+-- this is it
+
+
+-- [[-2,3,6],[-7,-3,1],[-7,-2,1],[-7,-3,0]]
+
+
+p
+
+p = (fmap fromInteger <$> p) :: Num a => [[a]]
+
+:t p
+
+
+d1 $ pat #ch 12
+
+d1 $ note (l +| "0 1 2 3") #ch 12
+
+d1 $ weaveWith 3 (note "[0 1 2 3]")
+  l #ch 12
+
+
+:t l
+
+d1 $ note (toScale (l!!0) "0 1 2 3") #ch 12
+
+d1 $ ifp ((== 0).(flip mod 2))
+  (fast 2)
+  (fast 4) $
+  note "0 1 2 3" #ch 12
+
+
+hush
+
+
+cv x = channel (x + 1)
+
+volt v = n v # s "voltage"
+
+d1 $ stack [
+  volt "1*2" #legato 0.05 #cv 2,
+  note ("0*2") #ch 12
+  ]
+
+d1 $ volt "1*8" #legato 0.05 #cv 2
+
+d1 $ note ("0*4") #ch 12

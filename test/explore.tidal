@@ -1,6 +1,6 @@
 hush
 
-d1 $ note ("0*4") #ch 1
+d1 $ note ("0*4") #ch 12
 
 d1 $ s "[[bd hh?] [hh hh?], [sd(3,8)?]/2]*4"
 
@@ -16,9 +16,9 @@ keySig = mode 5 $ C \\\ mMaj
 
 keySig = mode 5 $ F \\\ mMaj
 
-d1 $ note (keySig "[<0 [0 7]> <2!2 [-2 7] 3> 4 <2!3 5>]*2" - 0) #ch 1
+d1 $ note (keySig "[<0 [0 7]> <2!2 [-2 7] 3> 4 <2!3 5>]*2" - 0) #ch 12
 
-d2 $ note (keySig "[-2 0 . 2]/4") #ch 2
+d2 $ note (keySig "[-2 0 . 2]/4") #ch 12
 
 hush
 

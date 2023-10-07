@@ -1,0 +1,7 @@
+p <- prog4
+
+pat = subPat 2 4 $ (cat $ note <$> (`toScale` "[0 1 2 3 4 5 6 7]*2") <$> (fmap fromInteger <$> p)) |- note 12 #ch 12
+
+d1 pat
+
+hush''
