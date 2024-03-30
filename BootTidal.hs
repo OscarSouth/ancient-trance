@@ -38,15 +38,15 @@ let p = streamReplace tidal
     anticipate i = transition tidal True (Sound.Tidal.Transition.anticipate) i
     anticipateIn i t = transition tidal True (Sound.Tidal.Transition.anticipateIn t) i
     forId i t = transition tidal False (Sound.Tidal.Transition.mortalOverlay t) i
-    d1 = p 1
-    d2 = p 2
-    d3 = p 3
-    d4 = p 4
-    d5 = p 5
-    d6 = p 6
-    d7 = p 7
-    d8 = p 8
-    d9 = p 9
+    d01 = p 1
+    d02 = p 2
+    d03 = p 3
+    d04 = p 4
+    d05 = p 5
+    d06 = p 6
+    d07 = p 7
+    d08 = p 8
+    d09 = p 9
     d10 = p 10
     d11 = p 11
     d12 = p 12
@@ -56,7 +56,7 @@ let p = streamReplace tidal
     d16 = p 16
 :}
 
-hush = mapM_ ($ silence) [d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16]
+hush = mapM_ ($ silence) [d01,d02,d03,d04,d05,d06,d07,d08,d09,d10,d11,d12,d13,d14,d15,d16]
 
 din = s "din"
 ch n = (din #midichan (n-1))
@@ -323,7 +323,6 @@ perc bars pat = do
                 ("pppp", (#vel 0.25))
                 ]
    in ur bars pat ps fs
-
 
 sidestick pat = midinote (pat |= 37) #ch 10
 tamb pat = midinote (pat |= 54) #ch 10

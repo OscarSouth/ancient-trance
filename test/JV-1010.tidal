@@ -1,0 +1,28 @@
+d10 $ midinote "36(3,8)?" #vel 0.2 #ch 10
+  -- >> silence
+
+d9 $ midinote "36" #vel 0.3 #ch 10
+  >> silence
+
+d11 $ midinote "[<~ [39]> 42]*4" #vel 0.5 #ch 10
+  -- >> silence
+
+d1 $ slow 2 $ note (keySig "<[0,9,4] [0,7,3] [0,9,5]>" |- "<12 7 4 9>*4") #ch 1
+
+hush
+
+p <- prog4
+
+d1 $ (cat $ note <$> (`toScale` "[0 7 3 7 5 7 3 7]") <$> (fmap fromInteger <$> p)) |- note 12 #ch 1
+
+d1 $ (cat $ note <$> (`toScale` "[0 1 2 3]*4") <$> (fmap fromInteger <$> p)) |- note 12 #ch 1
+
+d1 $ slow 2 $ (cat $ note <$> (`toScale` "[0,1,2,<5 6 7 6>*5]") <$> (fmap fromInteger <$> p)) |- note 12 #ch 1
+
+
+-- session 053
+-- "|   Bb_min_1stInv  |   Bb_sus4_1stInv |   F_min          |   F_min          |"
+-- "[   [1,5,10]       ,   [3,5,10]       ,   [5,8,12]       ,   [5,8,12]       ]"
+
+-- "|   Eb_6sus2no5    |   Bb_min_1stInv  |   F_sus4_2ndInv  |   Bb_min         |"
+-- "[   [3,5,12]       ,   [1,5,10]       ,   [0,5,10]       ,   [-2,1,5]       ]"

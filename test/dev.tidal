@@ -1,0 +1,32 @@
+hush
+
+:r
+
+prog4
+
+progTest
+
+gammaGen 6 0.2
+
+:t initFundamental "C"
+
+:t chooseFunctionality "flat" (P 0)
+
+:t chordList' flat 3 --(parseFunds "0#")
+
+let filters = chordList' 3 (parseFunds "0#") (filter (\x -> x `elem` parseKey "0#") $ parseNotes "*")
+
+filters flat
+
+recommendations "flat" (P 0) (constructCadence ("asc 1","[P 0,P 4,P 7]")) filters 4
+
+(constructCadence ("asc 1","[P 0,P 4,P 7]"))
+
+
+:r
+
+let cadence = initCadenceState 3 "D" [0,9,6]
+
+cadence
+
+getNext cadence

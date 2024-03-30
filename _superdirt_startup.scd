@@ -2,9 +2,9 @@
 
 s.reboot {
 
-  // s.options.device = "M4";
-  s.options.device = "PCH";
 	// s.options.device = "PreSonus AudioBox iTwo";
+	// s.options.device = "M4";
+	s.options.device = "PCH";
 	s.options.numOutputBusChannels = 4;
 	s.options.numInputBusChannels = 4;
 	// s.options.memSize = 1024*500;
@@ -22,10 +22,10 @@ s.reboot {
 		~latency = 0.0;
 		MIDIClient.init;
 		MIDIClient.destinations;
-    // ~midiDIN = MIDIOut.newByName("M4", "M4 MIDI 1");
-		~midiDIN = MIDIOut.newByName("Midi Through", "Midi Through Port-0");
-		// ~midiDIN = MIDIOut.newByName("SuperCollider", "in0");
 		// ~midiDIN = MIDIOut.newByName("iConnectAUDIO4+", "iConnectAUDIO4+ DIN");
+		// ~midiDIN = MIDIOut.newByName("SuperCollider", "out0");
+		~midiDIN = MIDIOut.newByName("FLUID Synth (2556)" , "Synth input port (2556:0)");
+		// ~midiDIN = MIDIOut.newByName("M4", "M4 MIDI 1");
 		// ~midiDIN = MIDIOut.newByName("PreSonus AudioBox iTwo", "PreSonus AudioBox iTwo MIDI 1");
 		~midiDIN.latency = ~latency;
 		~dirt.soundLibrary.addMIDI(\din, ~midiDIN);

@@ -1,0 +1,124 @@
+(keySig,v,c,b) = (
+  C \\\ aeolian
+  ,(f vTheme, f vHarm, 0) :: Section
+  ,(f cTheme, f cHarm, 1) :: Section
+  ,(f bTheme, f bHarm, 2) :: Section
+  )
+    where
+      f a =
+        let func = cat
+         in (func $ fst a, func $ snd a)
+      vTheme = ([ -- VERSE THEME
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      vHarm = ([ -- VERSE HARMONY
+        "4 3 0 0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      cTheme = ([ -- CHORUS THEME
+        "0",
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      cHarm = ([ -- CHORUS HARMONY
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      bTheme = ([ -- BREAK THEME
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      bHarm = ([ -- BREAK HARMONY
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+
+  -- UPRIGHT BASS
+p06 p0 p1 p2 = d06 $ do
+  let (motion, prog) = (snd' p0, inKey p1)
+  id $
+    stack [silence
+      ,note 0
+      ] |* vel p2 #ch 06
+        |- note 12
+        |+| prog 4 (fst motion
+         +| "[0 -4 . -3]*8"
+         +| "[-0(3,8)]*8"
+          ) |+ note (snd motion)
+            |+ humanise 0.1
+      -- >> silence
+
+  -- EXAMPLE
+p05 p0 p1 p2 = d05 $ do
+  let (motion, prog) = (fst' p0, inKey p1)
+  id $
+    stack [silence
+      ,note "0"
+      ] |* vel p2 #ch 05
+        -- |- note 12
+        |+| prog 4 (fst motion
+         +| "[0 -3]*2"
+          ) |+ note (snd motion)
+            -- >> silence
+
+  -- ELECTRIC PIANO
+p07 p0 p1 p2 = d07 $ do
+  let (motion, prog) = (snd' p0, inKey p1)
+  id $
+    stack [silence
+      ,note 0
+      ] |* vel p2 #ch 07
+        -- |- note 12
+        |+| prog 4 (fst motion
+         +| "<~ [0,2,4]>*32"
+          ) |+ note (snd motion)
+          |+ humanise 0.2
+            |= legato 0.2
+      -- >> silence
+
+  -- ACOUSTIC PIANO
+p08 p0 p1 p2 = d08 $ do
+  let (motion, prog) = (snd' p0, inKey p1)
+  id $
+    stack [silence
+      ,note 0
+      ] |* vel p2 #ch 08
+        |- note 24
+        |+| prog 4 (fst motion
+         -- +| "[0]"
+          ) |+ note (snd motion)
+            |+ humanise 0.1
+            -- |= legato 0.2
+      -- >> silence
+
+  -- RUISMAKER
+p09 p0 = d09 $ do
+  id $
+    stack [silence
+      -- ,trunc 0.5 $ ruismk minim "bd(3,8)"
+      ,ruismk crotchet "sb"
+      ,ruismk minim "~ cp"
+      -- ,ruismk 2 "hats"
+      -- ,ruismk minim "~ fm"
+      ] |* vel p0 #ch 09
+      -- >> silence
+
+  -- EXAMPLE
+p13 p0 p1 p2 = d13 $ do
+  let (motion, prog) = (fst' p0, inKey p1)
+  id $
+    stack [silence
+      -- ,slow 2 $ note "0 ~"
+      ] |* vel p2 #ch 13
+        -- |- note 12
+        |+| prog 4 (fst motion
+         +| "[0 -3]*2"
+          ) |+ note (snd motion)
+            -- >> silence

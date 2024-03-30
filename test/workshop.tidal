@@ -1,5 +1,7 @@
 hush''
 
+hush
+
 keySig = mode 3 $ F \\\ mMaj
 
 setcps 1

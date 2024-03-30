@@ -1,0 +1,20 @@
+intervalVector [3, 6, 1]
+
+dissonanceLevel [0,3,7]
+
+i $ snd . deconstructCadence $ toCadence ((toTriad flat [0,3,7]),(toTriad flat [2,5,9]))
+
+let c = (toTriad flat [0,3,7])
+
+fst . dissonanceLevel $ fromChord c
+
+r <- retrieveSeq4
+
+hush
+
+match (init: Cadence{chord: "[P 0,P 3,P 7]", movement: "pedal"})
+with init
+match (init)-[r]->(next)
+return
+  next.chord, next.movement, round(r.confidence+(rand()*0.005), 4) as t_prob
+  order by (r.confidence+(rand()*0.01)) desc;
