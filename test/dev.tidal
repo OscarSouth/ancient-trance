@@ -8,25 +8,250 @@ progTest
 
 gammaGen 6 0.2
 
+gammaGen 1 0.2
+
 :t initFundamental "C"
 
 :t chooseFunctionality "flat" (P 0)
 
 :t chordList' flat 3 --(parseFunds "0#")
 
-let filters = chordList' 3 (parseFunds "0#") (filter (\x -> x `elem` parseKey "0#") $ parseNotes "*")
 
 filters flat
 
-recommendations "flat" (P 0) (constructCadence ("asc 1","[P 0,P 4,P 7]")) filters 4
+recs <- recommendations "flat" (P 0) (constructCadence ("asc 1","[P 0,P 4,P 7]")) filters 4
+
+recs
 
 (constructCadence ("asc 1","[P 0,P 4,P 7]"))
 
 
-:r
 
-let cadence = initCadenceState 3 "D" [0,9,6]
-
-cadence
+:t getNextsFromGraph cadence
 
 getNext cadence
+
+hush
+
+-- let cadence = initCadenceState 3 "D" [0,4,7]
+
+:r
+
+triad <- gammaGen 3 1
+
+let cadenceState = initCadenceState 2 "D" triad
+
+cadenceState
+
+showCadenceState cadenceState
+
+let filters = chordList' 3 (parseFunds "0#") (filter (\x -> x `elem` parseKey "0#") $ parseNotes "*")
+
+nextCadence 0.2 cadenceState filters flat
+
+
+:r
+
+do
+  triad <- gammaGen 3 1
+  -- let triad = [0,4,7]
+  let cadenceState = initCadenceState 2 "C" triad
+  let filters = chordList' 3 (parseFunds "*") (filter (\x -> x `elem` parseKey "*") $ parseNotes "0#")
+  -- getCadenceOptions cadenceState filters flat
+  nextCadence flat cadenceState filters 0.2
+
+fromChord' $ toTriad flat [2,5,9]
+
+-- fromChord' :: (Integral a, Num a) => Chord -> NoteName
+fromChord' (Chord ((n,_),_)) = n--fromIntegral . toInteger <$> xs
+
+
+:r
+
+cadenceState = initCadenceState 2 "C" [0,3,7]
+
+let filters = chordList' 3 (parseFunds "*") (filter (\x -> x `elem` parseKey "*") $ parseNotes "3b")
+
+length $ filters flat
+
+cadenceState <- nextCadence flat cadenceState filters 0.2
+
+
+:r
+
+  -- init Cadence State
+let cadenceState = initCadenceState 5 "C" [0,3,7]
+
+  -- harmonic filter params
+let tuning = "*"
+    key = "*"
+    funds = "*"
+    context = harmonicContext tuning key funds
+    -- print contextual prompt
+    -- can melody be added? similar to funds but contained in structure
+    -- helper to create chain of contexts that can pass to chainCadence
+
+let len = 2
+    entropy = 1
+
+print "START"
+
+progression <- chainCadence flat cadenceState context len entropy
+
+:r
+
+
+
+
+
+progression <- chainCadence flat
+  (initCadenceState 5 "C" [0,3,7])
+  (harmonicContext "*" "*" "*")
+  16 -- len
+  0.1 -- entropy
+
+harmony progression
+
+cadence 2 progression
+
+[[0,3,7],[0,3,8],[1,4,8],[1,4,9]]
+
+
+cadence bar progression = do
+  cadences <- snd progression
+  -- chords <- fst progression
+  -- cadence <- cadences!!(bar+1)
+  return cadences
+
+cadence 1 progression
+
+once $ bpm 94
+
+let kick p  = note "10" +| p
+    snare p = note "17" +| p
+    hats p  = note "19" +| p
+
+d2 $ stack [ silence
+  -- , midinote "0 [0 0?] 0" |+ vel "0.4 [0.05 0.01] 0.1"
+  -- , midinote "[~ 1]/2" |+ vel "0.1"
+  -- , midinote "[2? 2? 3?]?" |+ vel "0.1"
+  -- , note "0 [0 0?] 0" |+ vel "0.8 [0.4 0.2] 0.6"
+  , note "[0 ~ 0? . ~]/2" |+ vel "0.6"
+  , note "[~ 1]/2" |+ vel "0.5"
+  , note "[2? 2? 3?]?" |+ vel "0.5"
+  ] |= thru 10
+    -- |+ note 36
+
+progression <- chainCadence flat
+  (initCadenceState (-7) "G" [0,3,7])
+  (harmonicContext
+    "*" -- overtones
+    "*" -- tonality
+    "*" -- roots
+    )
+  16 -- len
+  0.4 -- entropy
+
+d2 $ slow 4 (cat $ note <$> (`toScale` "[-4 1 -4 3 2 1]*2") <$> (fmap fromInteger <$> harmony progression)) |- note "12" #thru "[1,2]"
+
+harmony progression
+
+cadence 2 progression
+
+hush
+
+
+d16 $ stack [ silence
+  , slow (16*4) $ note "4"
+  ] |= thru 16
+
+
+hush
+
+
+:r
+
+d1 $ stack [ silence
+  -- , midinote "[0]" |+ vel "0.3
+  -- , midinote "[~ 1]/2" |+ vel "0.3"
+  , midinote "[[~ 2]]" |+ vel (fast 2 $ 0 ~> lfo tri 0.2 0.8)
+  -- , midinote "[[2]*8]" |+ vel (fast 2 $ 0 ~> lfo tri 0.2 0.8)
+  ] |= ch 10
+    |+ humanise 1
+    |+ note 36
+    -- >>silence
+
+p1 <- chainCadence flat
+  (initCadenceState (-2) "F" [0,4,7])
+  (harmonicContext
+    "*" -- overtones
+    "1b" -- tonality
+    "*" -- roots
+    )
+  8 -- len
+  0.4 -- entropy
+
+-- need some code to convert a single CadenceStage into a progression
+
+prog = chainProgression [p1, p2, p3, p4]
+
+prog -- https//GitHub.com/OscarSouth/theHarmonicAlgorithm
+
+once $ bpm ((66/4)* 3)
+
+-- going to pop into the office today, so it will be more repetive than normal
+-- enjoy the analogue sounds :)
+-- might appear in chat occassionally
+
+d2 $ progression p1 4 "[0 2 3 4 8 6 4 2]/4" |- note "12" #ch 12
+
+progression prog len pat = slow 2 $
+  slow (2*len) (cat $ note <$>
+  (`toScale` (fast (4*len) pat)) <$>
+  (fmap fromInteger <$>
+    (normaliseRegister $ smoothBass $ harmony prog)
+    )
+  )
+
+d2 $ slow 8 $ slow 2 (cat $ note <$> (`toScale` (fast 4 "[0 2 3 4]")) <$> (fmap fromInteger <$> (normaliseRegister $ smoothBass $ harmony progression))) |- note "0" #ch 12
+
+-- d3 $ slow 2 (cat $ note <$> (`toScale` (fast 4 "[0]")) <$> (fmap fromInteger <$> harmony progression)) |- note "12" #thru 3
+
+hush
+
+harmony p1
+
+smoothBass $ harmony p1
+
+normaliseRegister $ smoothBass $ harmony p1
+
+-- rotateProgression
+
+harmony progression
+
+hush
+
+:r
+
+p1 <- chainCadence flat
+  (initCadenceState (-2) "F" [0,4,7])
+  (harmonicContext
+    "*" -- overtones
+    "1b" -- tonality
+    "*" -- roots
+    )
+  4 -- len
+  0.4 -- entropy
+
+sliceProgression p1 1 2
+
+toMode flat <$> (scaleSets $ chordScale $ sliceProgression p1 2 4)
+
+
+-- voiceLead function to get the closest notes to the previous note in a progression
+
+-- voiceClose function to order the progression in the tighest way
+
+-- voiceWide function to order the progression in the widest way
+
+-- voiceHarmony function to get the absolute smoothest voice leading

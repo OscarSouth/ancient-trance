@@ -1,0 +1,86 @@
+hush''
+
+  -- OSCAR SOUTH 19.04.24
+
+master = 0.9
+
+p "transport" $ do
+  let out = 8*9999
+  let
+  seqP [syncStart
+    ,startTransport
+    ,stopTransport out
+    -- ,bar 0 out metronome
+    ]
+
+runWith allegro
+
+  ------------------------
+  ------ OSCAR DEV -------
+  ------------------------
+
+type Section = ((Pattern Int),(Pattern Int), Int)
+
+(keySig,v,c,b) = (
+  G \\\ lydian
+  ,(f vTheme, f vHarm, 0) :: Section
+  ,(f cTheme, f cHarm, 1) :: Section
+  ,(f bTheme, f bHarm, 2) :: Section
+  )
+    where
+      f a =
+        let func = cat
+         in func a
+      vTheme = ([ -- VERSE THEME
+        "0",
+        "0"
+        ])
+      vHarm = ([ -- VERSE HARMONY
+        "0"
+        ])
+      cTheme = ([ -- CHORUS THEME
+        "0",
+        "0"
+        ])
+      cHarm = ([ -- CHORUS HARMONY
+        "0"
+        ])
+      bTheme = ([ -- BREAK THEME
+        "0"
+        ])
+      bHarm = ([ -- BREAK HARMONY
+        "0"
+        ])
+
+  -- M32
+p12 p0 p1 p2 = d12 $ do
+  let (motion, prog) = (fst' p0, inKey p1)
+  id $
+    stack [silence
+      ,note "0 0 0"
+      ] |* vel p2 #ch 12
+        |+ note "[24 24 12]"
+        |+| prog 4 (motion
+         +| "[0 -3]*2"
+         +| "[<-3 -3 -3 0>]/2"
+          )
+
+do
+  let
+    dyn = 0.6
+    s = c
+    k = keySig
+    d = (*dyn)
+  mapM_ id [hush
+    ,p12 s k $d 0.8
+    ]
+
+progression <- chainCadence flat
+  (initCadenceState 2 "C" [0,3,7])
+  (harmonicContext "3b" "*" "*")
+  8 -- len
+  0.2 -- entropy
+
+d2 $ slow 2 (cat $ note <$> (`toScale` "[0 1 2 3 2 1]") <$> (fmap fromInteger <$> harmony progression)) |- note 12 #ch 12
+
+hush

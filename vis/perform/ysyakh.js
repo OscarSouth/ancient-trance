@@ -17,9 +17,9 @@ wait = (s=2) => new Promise(resolve => setTimeout(resolve,s*1000))
 choose = (array) => { return array[Math.floor(Math.random() * array.length)]; }
 recurring = (func, ms=1000) => setInterval(() => func, ms)
   //
-s0.initImage("/home/oscarsouth/sensoria/vis/snow_flake.png")
-s1.initImage("/home/oscarsouth/sensoria/vis/ocean.png")
-s2.initImage("/home/oscarsouth/sensoria/vis/ysyakh.png")
+s0.initImage("/home/oscarsouth/ancient-trance/vis/snow_flake.png")
+s1.initImage("/home/oscarsouth/ancient-trance/vis/ocean.png")
+s2.initImage("/home/oscarsouth/ancient-trance/vis/ysyakh.png")
   //
 snow_flake = src(s0)
 ocean = src(s1)

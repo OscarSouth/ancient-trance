@@ -18,7 +18,7 @@ a.show()
 a.setBins(3)
 a.setSmooth(0.65)
 
-s0.initImage("/home/oscarsouth/sensoria/vis/snow_flake.png")
+s0.initImage("/home/oscarsouth/ancient-trance/vis/snow_flake.png")
 
 snow_flake = src(s0)
   .scale( ()=>Math.sin(time/10)*.102+.15 )

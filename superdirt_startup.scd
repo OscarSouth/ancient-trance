@@ -2,36 +2,40 @@
 
 s.reboot {
 
-  // s.options.device = "M4";
-  s.options.device = "PCH";
+  s.options.device = "M4";
 	// s.options.device = "PreSonus AudioBox iTwo";
 	s.options.numOutputBusChannels = 4;
 	s.options.numInputBusChannels = 4;
-	// s.options.memSize = 1024*500;
 	s.options.numBuffers = 1024 * 256;
 	s.options.memSize = 8192 * 16;
+  // s.options.memSize = 1024*500;
 	s.options.numWireBufs = 65;
 	s.options.maxNodes = 1024 * 32;
 
 	s.waitForBoot {
 		~dirt = SuperDirt(2, s);
-		~dirt.loadSoundFiles("/home/oscarsouth/dirt_samples/none");
+		~dirt.loadSoundFiles("/home/oscarsouth/dirt_samples");
 		// ~dirt.loadSoundFiles();
 		s.sync;
 		~dirt.start(57120, [2]);
 		~latency = 0.0;
 		MIDIClient.init;
 		MIDIClient.destinations;
-    // ~midiDIN = MIDIOut.newByName("M4", "M4 MIDI 1");
-		~midiDIN = MIDIOut.newByName("Midi Through", "Midi Through Port-0");
-		// ~midiDIN = MIDIOut.newByName("SuperCollider", "in0");
+
+		// ~midiTHRU = MIDIOut.newByName("SuperCollider", "in0");
 		// ~midiDIN = MIDIOut.newByName("iConnectAUDIO4+", "iConnectAUDIO4+ DIN");
 		// ~midiDIN = MIDIOut.newByName("PreSonus AudioBox iTwo", "PreSonus AudioBox iTwo MIDI 1");
-		~midiDIN.latency = ~latency;
-		~dirt.soundLibrary.addMIDI(\din, ~midiDIN);
+
+    ~midiDIN = MIDIOut.newByName("M4", "M4 MIDI 1");
+    ~dirt.soundLibrary.addMIDI(\din, ~midiDIN);
+    ~midiDIN.latency = ~latency;
+
+    ~midiTHRU = MIDIOut.newByName("Midi Through", "Midi Through Port-0");
+		~midiTHRU.latency = ~latency;
+		~dirt.soundLibrary.addMIDI(\thru, ~midiTHRU);
 	};
 
-	s.latency = 0.0;
+	s.latency = 0.05;
 
 };
 );

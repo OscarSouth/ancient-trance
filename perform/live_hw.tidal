@@ -1,0 +1,114 @@
+hush
+
+once $ bpm 50
+
+once $ bpm 85
+
+d01 $ id
+  -- $ jux (0.25 ~>)
+  $ stack [ silence
+  -- , midinote "0 [0 0?] 0" |+ vel "0.4 [0.05 0.01] 0.1"
+  -- , midinote "[2 [3 2?] 2]*2?" |+ vel "0.4 [0.05 0.01] 0.1"
+  -- , midinote "[~ 1]/2" |+ vel "0.2"
+  -- , midinote "[2? 2? 3?]?" |+ vel "0.1"
+  -- , midinote "[2? 2? 3?]*2" |+ vel "0.2"
+  ] |= ch 10
+    |+ note 36
+    |* vel 1.5
+
+progression <- chainCadence flat
+  (initCadenceState (2) "G" [0,5,7])
+  (harmonicContext
+    "D A D G A D" -- overtones
+    "2#" -- tonality
+    "*" -- roots
+    )
+  16 -- len
+  0.7 -- entropy
+
+d2 $ slow 16 (cat $ note <$> (`toScale` "[8 7 6 5 4 3 2 1 0 2 4 6]*16") <$> (fmap fromInteger <$> (harmony progression ++ (fmap (+5) <$> (harmony progression))))) |- note "0" #ch 12
+
+
+d2 $ slow 8 (cat $ note <$> (`toScale` "[-4 1 -4 3 2 1]*4") <$> (fmap fromInteger <$> harmony progression)) |-| note "[-12 0 12 -12]" #ch "12"
+
+-- bug found! the notes of Gmaj [7,11,2] not defined in context
+
+-- few meetings to sit in on then i'll do a bit of dev here
+
+-- let me know if you get boredd of the current progression/patch
+-- going to get on with work and make incremental changes
+
+-- need to write some more helper functions but the basics are here
+
+-- until next time
+
+hush''
+
+
+progression <- chainCadence flat
+  (initCadenceState (-2) "D" [0,3,4])
+  (harmonicContext
+    "*" -- overtones
+    -- "G" -- tonality
+    "G Bb C D F" -- tonality
+    -- "G F# F E Eb D" -- roots
+    "G F# F E Eb D" -- roots
+    )
+  16 -- len
+  0.4 -- entropy
+
+harmony progression
+
+-- bug fixing
+
+
+parseOvertones "C' E' G'"
+
+parseKey "C"
+
+filter (\x -> x `elem` parseFunds "0# C#") $ parseOvertones "*"
+
+parseFunds "0# C#"
+
+hush
+
+progression <- chainCadence flat
+  (initCadenceState (-2) "D" [0,3,7])
+  (harmonicContext
+    "*" -- overtones
+    "G Bb C D F" -- tonality
+    "G F# F E Eb D" -- roots
+    )
+  4 -- len
+  0.4 -- entropy
+
+bass progression
+
+harmony progression = do
+  chords <- orderChord . fromChord <$> fst progression
+  return chords
+
+harmony progression
+
+sliceCadence :: ([Chord], [Cadence]) -> Int -> Int -> ([Chord], [Cadence])
+sliceCadence (chords, cadences) s e =
+  let (start, end) = (s-1, e-1)
+      sliceCadences = take (end - start + 1) $ drop start cadences
+      sliceChords = take (end - start + 1) $ drop start chords
+  in (sliceChords, sliceCadences)
+
+sliceCadence progression 1 4
+
+
+--cadence bar progression = do
+--  cadences <- snd progression
+--  chords <- fst progression
+--  roots <- bassNoteFromChord <$> fst progression
+--  return roots
+
+getCadenceState :: ([Chord], [Cadence]) -> Int -> CadenceState
+getCadenceState (chords, cadences) index =
+  let cadence = cadences !! index
+      chord = chords !! index
+      root = rootNote' chord
+  in CadenceState (cadence, root)

@@ -1,0 +1,65 @@
+-- good morning
+
+hush
+
+once $ bpm 40
+
+once $ bpm 100
+
+once $ bpm 85
+
+d01 $ id
+  -- $ fast 4
+  -- $ rarely (jux (0.25 ~>))
+  $ stack [ silence
+  , slow 2 $ midinote "0 [0 0?] 0" |+ vel "0.6 [0.05 0.01] 0.1"
+  -- , midinote "[2 [3 2?] 2]*2?" |+ vel "0.4 [0.05 0.01] 0.1"
+  -- , midinote "[~ 1]/2" |+ vel "0.2"
+  , midinote "[~ 1]/4" |+ vel "0.6"
+  , midinote "[2? 2? 3?]?" |+ vel "0.1"
+  -- , midinote "[2? 2? 3?]*2" |+ vel "0.2"
+  ] |= thru 10
+    -- |+ note 36
+    |+ note 60
+    |* vel 0.5
+
+:r
+
+states <- chainCadence sharp
+  (initCadenceState (5) "D" [0,5,7])
+  (harmonicContext
+    "D A D G A D" -- overtones
+    "1b" -- tonality
+    "D F G A C" -- roots
+    )
+  16 -- len
+  0.2 -- entropy
+
+sliceCadence states 3 6
+
+hush
+
+:t cadenceState
+
+d2 $ rarely (rev . (fast 4)) $ slow 16 (cat $ note <$> (`toScale` ("[0,1,2]")) <$> (fmap fromInteger <$> (harmony progression))) |+ note "12" #thru "1"
+
+d3 $ slow 16 (cat $ note <$> (`toScale` (sometimes (4-) $ "[0 2? 0 3? 1 2?]*8")) <$> (fmap fromInteger <$> (harmony progression))) |+ note "12" #thru "2" #legato 3
+
+d4 $ slow 16 (cat $ note <$> (`toScale` ("[0]*4")) <$> (fmap fromInteger <$> (harmony progression))) |+ note "-24" #thru "3" #legato 0.5
+
+-- harmony :: ([Chord], [Cadence]) -> IO [[Int]]
+harmony progression = do
+  chords <- fromChord <$> fst progression
+  return chords
+
+  -- harmony :: ([Chord], [Cadence]) -> IO [[Int]]
+harmony progression = do
+  chords <- map (orderChord . fromChord) <$> pure (fst progression)
+  return chords
+
+
+
+hush
+
+
+progression <- chainCadence sharp (initCadenceState (5) "G" [0,5,7]) (harmonicContext "*" "2b E" "D G C F# F C#") 16 0.3

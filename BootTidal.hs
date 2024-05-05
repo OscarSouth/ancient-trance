@@ -38,6 +38,15 @@ let p = streamReplace tidal
     anticipate i = transition tidal True (Sound.Tidal.Transition.anticipate) i
     anticipateIn i t = transition tidal True (Sound.Tidal.Transition.anticipateIn t) i
     forId i t = transition tidal False (Sound.Tidal.Transition.mortalOverlay t) i
+    d1 = p 1
+    d2 = p 2
+    d3 = p 3
+    d4 = p 4
+    d5 = p 5
+    d6 = p 6
+    d7 = p 7
+    d8 = p 8
+    d9 = p 9
     d01 = p 1
     d02 = p 2
     d03 = p 3
@@ -56,10 +65,12 @@ let p = streamReplace tidal
     d16 = p 16
 :}
 
-hush = mapM_ ($ silence) [d01,d02,d03,d04,d05,d06,d07,d08,d09,d10,d11,d12,d13,d14,d15,d16]
+hush = mapM_ ($ silence) [d1,d2,d3,d4,d5,d6,d7,d8,d9, d01,d02,d03,d04,d05,d06,d07,d08,d09,d10,d11,d12,d13,d14,d15,d16]
 
 din = s "din"
 ch n = (din #midichan (n-1))
+midi = s "thru"
+thru n = (midi #midichan (n-1))
 ccScale = (*127)
 cc n val = control (ccScale val) #io n where io n = (midicmd "control" #ctlNum n)
 cc' c n val = control (ccScale val) #io n c where io n c = (din #midicmd "control" #midichan (c-1) #ctlNum (n))
@@ -79,6 +90,7 @@ resetCycles = streamResetCycles tidal
 master = 0.99
 runWith f = resetCycles >> f
 
+oct n = note (12*n)
 out = 4
 bar b1 b2 p = ((b1+2)*4, (b2+3)*4, p)
 phrase = bar
@@ -115,6 +127,93 @@ hMaj = [0,2,3,5,7,8,11]
 
 hMaj :: Num a => [a]
 hMin = [0,2,4,5,7,8,11]
+
+ionian :: Num a => [a]
+ionian = [0,2,4,5,7,9,11]
+
+dorian :: Num a => [a]
+dorian = [0,2,3,5,7,9,10]
+
+phrygian :: Num a => [a]
+phrygian = [0,1,3,5,7,8,10]
+
+lydian :: Num a => [a]
+lydian = [0,2,4,6,7,9,11]
+
+mixolydian :: Num a => [a]
+mixolydian = [0,2,4,5,7,9,10]
+
+aeolian :: Num a => [a]
+aeolian = [0,2,3,5,7,8,10]
+
+locrian :: Num a => [a]
+locrian = [0,1,3,5,6,8,10]
+
+melMin :: Num a => [a]
+melMin = [0,2,3,5,7,9,11]
+
+melMin2 :: Num a => [a]
+melMin2 = [0,1,3,5,7,9,10]
+
+melMin3 :: Num a => [a]
+melMin3 = [0,2,4,6,8,9,11]
+
+melMin4 :: Num a => [a]
+melMin4 = [0,2,4,6,7,9,10]
+
+melMin5 :: Num a => [a]
+melMin5 = [0,2,4,5,7,8,10]
+
+melMin6 :: Num a => [a]
+melMin6 = [0,2,3,5,6,8,10]
+
+melMin7 :: Num a => [a]
+melMin7 = [0,1,3,4,6,8,10]
+
+harmMin :: Num a => [a]
+harmMin = [0,2,3,5,7,8,11]
+
+harmMin2 :: Num a => [a]
+harmMin2 = [0,1,3,5,6,9,10]
+
+harmMin3 :: Num a => [a]
+harmMin3 = [0,2,4,5,8,9,11]
+
+harmMin4 :: Num a => [a]
+harmMin4 = [0,2,3,6,7,9,10]
+
+harmMin5 :: Num a => [a]
+harmMin5 = [0,1,4,5,7,8,10]
+
+harmMin6 :: Num a => [a]
+harmMin6 = [0,3,4,6,7,9,11]
+
+harmMin7 :: Num a => [a]
+harmMin7 = [0,1,3,4,6,8,9]
+
+penta :: Num a => [a]
+penta = [0,2,4,7,9]
+
+penta2 :: Num a => [a]
+penta2 = [0,2,5,7,10]
+
+penta3 :: Num a => [a]
+penta3 = [0,3,5,8,10]
+
+penta4 :: Num a => [a]
+penta4 = [0,2,5,7,9]
+
+penta5 :: Num a => [a]
+penta5 = [0,3,5,7,10]
+
+dimWhole :: Num a => [a]
+dimWhole = [0,2,3,5,6,8,9,11]
+
+dimHalf :: Num a => [a]
+dimHalf = [0,1,3,4,6,7,9,10]
+
+wholeTone :: Num a => [a]
+wholeTone = [0,2,4,6,8,10]
 
 mode m key pat = key (pat |+ m)
 transpose st key pat = (key pat) |+ st
@@ -378,6 +477,90 @@ let setI = streamSetI tidal
     setS = streamSetS tidal
     setR = streamSetI tidal
     setB = streamSetB tidal
+:}
+
+:{
+adagio = do
+    setCC 6 51 127
+    setcps (71/60/4)
+
+andante = do
+    setCC 6 52 127
+    setcps (85/60/4)
+
+moderato = do
+    setCC 6 53 127
+    setcps (110/60/4)
+
+allegro = do
+    setCC 6 54 127
+    setcps (135/60/4)
+:}
+
+:{
+metronome =
+    stack[silence
+      ,n "0*4" #midinote 66
+      ,cc 87 "2.8 0 . 0 0 . 0 2.8"
+      ] #ch 09
+
+:}
+
+click val = setCC 9 90 (val*127)
+
+:{
+son32 =
+    stack[silence
+      ,n "0(3,8) . ~ 0 0 ~" #midinote "66"
+      ,cc 87 0
+      ] #ch 09
+:}
+
+son23 = 0.5 <~ son32
+
+:{
+rumba32 =
+    stack[silence
+      ,n "0 [~ 0] ~ [~ 0] . ~ 0 0 ~" #midinote "66"
+      ,cc 87 0
+      ] #ch 09
+:}
+
+rumba23 = 0.5 <~ rumba32
+
+:{
+bossa32 =
+    stack[silence
+      ,n "0(3,8) . ~ 0 [~ 0] ~" #midinote "66"
+      ,cc 87 0
+      ] #ch 09
+:}
+
+syncStart = (0, 1, silence)
+out = 4
+startTransport = bar 0 0 (setCC' 6 50 127)
+startTransport' = setCC' 6 00 127
+stopTransport out = bar (out+1) (out+1) (setCC' 6 50 0)
+stopTransport' = setCC' 6 50 0
+
+bossa23 = 0.5 <~ bossa32
+
+:{
+
+progression :: Progression -> Pattern Time -> Pattern Int -> Pattern ValueMap
+progression prog len pat =
+  slow (4*len) (cat $ note <$>
+  (`toScale` (fast (4*len) pat)) <$>
+    fmap fromInteger <$> harmony prog
+  )
+
+  progression' :: Progression -> Pattern Time -> Pattern Int -> Pattern ValueMap
+  progression' prog len pat =
+    slow (4*len) (cat $ note <$>
+    (`toScale` (fast (4*len) pat)) <$>
+      fmap fromInteger <$> closeVoicing prog
+    )
+
 :}
 
 :set prompt "tidal> "

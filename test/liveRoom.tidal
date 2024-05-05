@@ -1,0 +1,52 @@
+hush
+
+once $ bpm 90
+
+d11
+
+d10 $ id
+  -- $ fast 4
+  -- $ rarely (jux (0.25 ~>))
+  $ stack [ silence
+  -- , midinote "0" |+ vel "0.3"
+  -- , midinote "[~ 2]" |+ vel "0.3"
+  -- , midinote "[~ 1]/2" |+ vel "0.2"
+  -- , midinote "[2 2 2 2]" |+ vel (fast 1 $ lfo tri 0.2 0.8)
+  -- , midinote "[~ 0]/2" |+ vel "0.4"
+  -- , midinote "~ [0 0?] 0" |+ vel "0.6 [0.05 0.01] 0.1"
+  ] |= thru 10
+    -- |+ note 36
+    |+ note 60
+    |* vel 0.5
+
+
+r = 2
+
+p1 <- chainCadence flat
+  (initCadenceState 5 "D" [0,5,7])
+  (harmonicContext
+    "D A D G A D" -- overtones
+    "*" -- tonality
+    "1b 0#" -- roots
+    )
+  4 -- len
+  0.3 -- entropy
+
+d1 $ stut 4 (1/2) (3/4) $ jux (0.75~>) $ progression p1 r "[3 <1 [3 7]> [2 5] 0]/8" |+ thru 2 |* vel 0.2
+
+-- d1 $ progression p1 r "[[0 . 0 1] [-3 2]]/2" |+ thru 2 |* vel 0.2
+
+d1 $ stut 2 (1/2) (3/4) $ progression p1 r "[[0 . 0 1] [-3 2]]/4" |+ thru 2 |* vel 0.2
+
+d2 $ progression p1 r "[[0] ~]/8" |+ thru 3 |- note 12 |* vel 0.3
+
+d3 $ progression p1 r "[[0,1,2] ~ . ~]/8" |+ thru 1 |* vel 0.3
+
+p1
+
+harmony p1
+
+hush''
+
+-- subRange voicing function
+-- easily apply enharm func to range of a progression

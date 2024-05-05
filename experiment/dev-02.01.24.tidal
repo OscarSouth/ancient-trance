@@ -1,0 +1,66 @@
+hush''
+
+once $ bpm 118
+
+d10 $ id
+  -- $ fast 4
+  -- $ rarely (jux (0.25 ~>))
+  $ stack [ silence
+  , midinote "0" |+ vel "0.2"
+  -- , midinote "[~ 1]/2" |+ vel "0.2"
+  -- , midinote "[~ 2]" |+ vel "0.3"
+  , midinote "[2 2 3 2]" |+ vel (fast 1 $ lfo tri 0.2 0.8) |* vel 0.3
+  ] |= ch 10
+    |+ note 36
+    -- |+ note 60
+    |* vel 0.5
+
+r = (2)
+
+p1 <- chainCadence flat
+  (initCadenceState 0 "C" [0,3,7])
+  (harmonicContext
+    "*" -- overtones
+    "*" -- tonality
+    "C C# Eb" -- roots
+    )
+  2 -- len
+  0.2 -- entropy
+
+-- GET THE LAUNCHER & TRANSPORT WORKING!!!!
+
+d1 $ progression p1 r (stack [
+  -- "[[0 ~ ~ 3] <~ [~ . 4 2]>]"
+  "[2*32 . 1*16 0*16]/8"
+  -- "[6 [0 7] [1 5] [0 4] 2 [3 5] [4 6] 7]"
+  ])
+  |+ note 0 |+ ch 12
+  -- >> silence
+
+d2 $ progression p1 r (stack [
+  "[[0 ~ 0 ~] ~ 3 ~ ]/2"--,
+  -- "[~@7 1]/2"
+  ]) |+ legato 0.5
+  |- note 24 |+ ch 11
+  -- >> silence
+
+progression :: Progression -> Pattern Time -> Pattern Int -> Pattern ValueMap
+progression prog len pat =
+  slow (4*len) (cat $ note <$>
+  (`toScale` (fast len pat)) <$>
+    fmap fromInteger <$> harmony prog
+  )
+
+
+-- progression :: Progression -> Pattern Time -> Pattern Int -> Pattern ValueMap
+-- progression prog len pat = slow 4 $
+--   slow (0.5*len) (cat $ note <$>
+--   (`toScale` (fast (1*len) $ slow 4 pat)) <$>
+--   (fmap fromInteger <$>
+--     (harmony prog)
+--     )
+--   )
+
+p1
+
+hush''
